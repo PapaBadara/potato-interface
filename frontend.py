@@ -6,10 +6,13 @@ import numpy as np
 # Fonction pour faire la prédiction
 def predict(image):
     # Préparer les données pour la requête POST
-    files = {"file" :  image}
+    files = {"file": image}
+
+    # URL de l'API FastAPI hébergée sur GitHub
+    api_url = "https://potato-interface.herokuapp.com/predict"
 
     # Envoyer la requête à l'API FastAPI
-    req = requests.post("http://localhost:8000/predict", files=files)
+    req = requests.post(api_url, files=files)
 
     # Extraire les résultats de la réponse JSON
     resultat = req.json()
