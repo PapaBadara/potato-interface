@@ -14,18 +14,10 @@ def predict(image):
     # Envoyer la requête à l'API FastAPI
     req = requests.post(api_url, files=files)
 
-    # Vérifier le statut de la réponse
-    if req.status_code == 200:
-        # Si la réponse est réussie, essayer de la décoder en JSON
-        try:
-            resultat = req.json()
-            return resultat
-        except ValueError:
-            # Si la réponse n'est pas au format JSON, afficher un message d'erreur
-            return {"error": "La réponse de l'API n'est pas au format JSON."}
-    else:
-        # Si la réponse n'est pas réussie, afficher un message d'erreur avec le code de statut
-        return {"error": f"Erreur {req.status_code} lors de la requête à l'API."}
+    # Extraire les résultats de la réponse JSON
+    resultat = req.json()
+    
+    return resultat
 
 # Titre de l'application
 st.title("Classification d'Images de Pommes de Terre")
@@ -39,14 +31,9 @@ if upload:
     # Faire la prédiction
     resultat = predict(upload.getvalue())
     
-    # Si la prédiction s'est déroulée sans erreur
-    if "error" not in resultat:
-        # Afficher l'image téléchargée
-        st.image(Image.open(upload), caption='Image de Pomme de Terre', use_column_width=True)
-        
-        # Afficher les résultats de la prédiction
-        st.write(f"Classe prédite : {resultat['class']}")
-        st.write(f"Confiance : {resultat['confidence']:.2f}")
-    else:
-        # Si une erreur s'est produite lors de la prédiction, afficher un message d'erreur
-        st.error(resultat["error"])
+    # Afficher l'image téléchargée
+    st.image(Image.open(upload), caption='Image de Pomme de Terre', use_column_width=True)
+    
+    # Afficher les résultats de la prédiction
+    st.write(f"Classe prédite : {resultat['class']}")
+    st.write(f"Confiance : {resultat['confidence']:.2f}")
